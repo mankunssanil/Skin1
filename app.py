@@ -1,77 +1,61 @@
 from flask import Flask, render_template, request
+import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
-from PIL import Image
-import cv2
-import os
 
 app = Flask(__name__)
 
 # Load the skin disease detection model
 model = load_model("skin_cancer.h5")
 
-# Define classes and other relevant information
-classes = {
-    4: ('nv', 'Melanocytic nevi', ['Sensitivity to touch around the mole', 'Redness or inflammation around the mole'],
-        ['Avoid tight Clothing', 'Limit exposure to direct sunlight']),
-    6: ('mel', 'Melanoma', ['Multiple colors within a mole', 'Bleeding or oozing from a mole'],
-        ['Eat a balanced diet rich in antioxidants and vitamins', 'Avoid smoking and limit alcohol consumption']),
-    2: ('bkl', 'Benign keratosis-like lesions', ['Itching or irritation in affected areas, Round or oval shaped growths',
-                                                 'Very small growths clustered around the eyes or elsewhere on the face'],
-        ['Moisturize Regularly', 'Manage Stress by meditation or yoga']),
-    1: ('bcc', 'Basal cell carcinoma', ['Surrounding skin becoming sunken or depressed',
-                                         'Formation of a flesh-coloured, pearl like bump'],
-        ['Avoid harmful chemicals', 'Wear Protective Clothing']),
-    5: ('vasc', 'Pyogenic granulomas and hemorrhage', ['Prone to Ulceration', 'Moist or friable surface structure'],
-        ['Use sunscreen with a high SPF', 'Keep the affected arear covered with a sterile dressing']),
-    0: ('akiec', 'Actinic keratoses and intraepithelial carcinomae',
-        ['Swelling and burning in affected region', 'Thickening of the skin'],
-        ['Avoid tanning beds and sunlamps', 'Avoid hot shower and opt for lukewarm water']),
-    3: ('df', 'Dermatofibroma', ['Dimpled appearance when pressed', 'Growing in size over time'],
-        ['Avoid using harsh chemicals or irritants', 'Drink plenty of water and maintain proper hydration'])
-}
+# Function to preprocess the image
+def preprocess_image(image_path):
+    # Load the image using OpenCV
+    image = cv2.imread(image_path)
+    # Resize the image to match the input size of the model
+    image = cv2.resize(image, (28, 28))
+    # Normalize pixel values to the range [0, 1]
+    image = image / 255.0
+    # Expand dimensions to create a batch of 1 image
+    image = np.expand_dims(image, axis=0)
+    return image
 
-# Define route for home page
-@app.route("/")
-def home():
-    return render_template("index.html")
+# Function to make predictions
+def predict_skin_disease(image_path):
+    # Preprocess the image
+    processed_image = preprocess_image(image_path)
+    # Make prediction using the model
+    prediction = model.predict(processed_image)
+    # Get the predicted class index
+    class_index = np.argmax(prediction)
+    # Return the predicted class label
+    return class_index
 
-# Define route for image upload and prediction
+# Route to render the index.html template
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Route to handle form submission
 @app.route('/submit', methods=['POST'])
 def submit():
-    if request.method == "POST":
+    if request.method == 'POST':
         # Check if a file was uploaded
-        if "file" not in request.files:
-            return render_template("index.html", prediction="No file uploaded")
-
-        file = request.files["file"]
-
-        # Check if the file is empty
-        if file.filename == "":
-            return render_template("index.html", prediction="No file selected")
-
-        # Check if the file is valid
+        if 'file' not in request.files:
+            return "No file uploaded"
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an empty file without a filename
+        if file.filename == '':
+            return "No selected file"
+        # If the file is valid, make prediction
         if file:
-            # Read and preprocess the image
-            image = Image.open(file)
-            image = image.resize((28, 28))
-            img = np.array(image).reshape(-1, 28, 28, 3)
-
+            # Save the uploaded image
+            file_path = "uploaded_image.jpg"
+            file.save(Skin-Disease)
             # Make prediction
-            result = model.predict(img)
-            max_prob = max(result[0])
-            class_ind = result[0].tolist().index(max_prob)
+            predicted_class_index = predict_skin_disease(file_path)
+            # Render the result template with prediction
+            return render_template('result.html', prediction=predicted_class_index)
 
-            # Get disease information from the classes dictionary
-            disease_code, disease_name, symptoms, precautions = classes[class_ind]
-
-            # Calculate confidence as a percentage
-            confidence_percentage = max_prob * 100
-
-            # Render prediction template with results
-            return render_template("index.html", prediction=disease_name,
-                                   confidence=f"{confidence_percentage:.2f}%", symptoms=symptoms, precautions=precautions)
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
