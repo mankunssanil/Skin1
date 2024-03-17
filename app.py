@@ -50,8 +50,8 @@ def predict():
         # If the file is valid, make prediction
         if file:
             # Save the uploaded image
-            file_path = "C:\\Users\\D E L L\\Documents\\Skin-Disease\\Basal cell carcinoma - Copy.jpg"
-            file.save(Skin-Disease)
+            file_path = "uploaded_image.jpg"
+            file.save(file_path)
             # Make prediction
             predicted_class_index = predict_skin_disease(file_path)
             # Render the result template with prediction
