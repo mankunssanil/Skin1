@@ -37,8 +37,8 @@ def index():
     return render_template('index.html')
 
 # Route to handle form submission
-@app.route('/submit', methods=['POST'])
-def submit():
+@app.route('/predict', methods=['POST'])
+def predict():
     if request.method == 'POST':
         # Check if a file was uploaded
         if 'file' not in request.files:
@@ -50,7 +50,7 @@ def submit():
         # If the file is valid, make prediction
         if file:
             # Save the uploaded image
-            file_path = "uploaded_image.jpg"
+            file_path = "C:\\Users\\D E L L\\Documents\\Skin-Disease\\Basal cell carcinoma - Copy.jpg"
             file.save(Skin-Disease)
             # Make prediction
             predicted_class_index = predict_skin_disease(file_path)
