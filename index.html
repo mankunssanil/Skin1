@@ -10,14 +10,16 @@
     <h1>Skin Disease Detection</h1>
     <div class="container text.center">
     <!-- Add your HTML content here -->
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    <form action="/predict" method="post" enctype="multipart/form-data">
         <input type="file" name="file" accept="image/*">
         <button type="submit">Predict</button>
     </form>
+        
 
     <!-- Display the result of skin disease detection -->
-    {% if result %}
-        <h2>Result:</h2>
+        <div class="row">
+            {% if prediction %}
+            <h2 class="text-warning">{{prediction}}</h2>
         
         <p>Predicted: {{ result }}</p>
         <p>Confidence: {{ confidence_percentage }}%</p>
