@@ -37,8 +37,8 @@ def home():
     return render_template("index.html")
 
 # Define route for image upload and prediction
-@app.route("/predict", methods=["POST"])
-def predict():
+@app.route('/submit', methods=['POST'])
+def submit():
     if request.method == "POST":
         # Check if a file was uploaded
         if "file" not in request.files:
