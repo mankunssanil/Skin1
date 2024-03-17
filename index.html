@@ -3,30 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disease Prediction Result</title>
-    <style>
-        body {
-            background-color: #ffe0bd; /* Skin tone color */
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffe0bd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            margin-top: 0;
-        }
-    </style>
+    <title>Skin Disease Detection</title>
+    <!-- Add any additional CSS or external stylesheet links here -->
 </head>
 <body>
+    <h1>Skin Disease Detection</h1>
+    <!-- Add your HTML content here -->
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*">
+        <button type="submit">Upload</button>
+    </form>
 
-<div class="container">
-    <h2>Predicted Disease:</h2>
-    <h3>{{ disease_name }}</h3>
-</div>
+    <!-- Display the result of skin disease detection -->
+    {% if result %}
+        <h2>Result:</h2>
+        <p>Predicted: {{ result }}</p>
+        <p>Confidence: {{ confidence_percentage }}%</p>
+        <!-- Add additional details like symptoms and precautions here -->
+    {% endif %}
 
+    <!-- Add any additional HTML content or elements here -->
 </body>
 </html>
