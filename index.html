@@ -8,41 +8,23 @@
 </head>
 <body>
     <h1>Skin Disease Detection</h1>
-    <div class="container text.center">
-    <!-- Add your HTML content here -->
-    <form action="/predict" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*">
-        <button type="submit">Predict</button>
-    </form>
-        
+    <div class="container text-center">
+        <!-- Form for uploading an image -->
+        <form action="/submit" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*">
+            <button type="submit">Predict</button>
+        </form>
 
-    <!-- Display the result of skin disease detection -->
+        <!-- Display the result of skin disease detection -->
         <div class="row">
             {% if prediction %}
-            <h2 class="text-warning">{{prediction}}</h2>
-        
-        <p>Predicted: {{ result }}</p>
-        <p>Confidence: {{ confidence_percentage }}%</p>
-          symptoms and precautions here 4: ('nv', 'Melanocytic nevi', ['Sensitivity to touch around the mole', 'Redness or inflammation around the mole'],
-        ['Avoid tight Clothing', 'Limit exposure to direct sunlight']),
-    6: ('mel', 'Melanoma', ['Multiple colors within a mole', 'Bleeding or oozing from a mole'],
-        ['Eat a balanced diet rich in antioxidants and vitamins', 'Avoid smoking and limit alcohol consumption']),
-    2: ('bkl', 'Benign keratosis-like lesions', ['Itching or irritation in affected areas, Round or oval shaped growths',
-                                                 'Very small growths clustered around the eyes or elsewhere on the face'],
-        ['Moisturize Regularly', 'Manage Stress by meditation or yoga']),
-    1: ('bcc', 'Basal cell carcinoma', ['Surrounding skin becoming sunken or depressed',
-                                         'Formation of a flesh-coloured, pearl like bump'],
-        ['Avoid harmful chemicals', 'Wear Protective Clothing']),
-    5: ('vasc', 'Pyogenic granulomas and hemorrhage', ['Prone to Ulceration', 'Moist or friable surface structure'],
-        ['Use sunscreen with a high SPF', 'Keep the affected arear covered with a sterile dressing']),
-    0: ('akiec', 'Actinic keratoses and intraepithelial carcinomae',
-        ['Swelling and burning in affected region', 'Thickening of the skin'],
-        ['Avoid tanning beds and sunlamps', 'Avoid hot shower and opt for lukewarm water']),
-    3: ('df', 'Dermatofibroma', ['Dimpled appearance when pressed', 'Growing in size over time'],
-        ['Avoid using harsh chemicals or irritants', 'Drink plenty of water and maintain proper hydration']
-    {% endif %}
+                <h2 class="text-warning">{{ prediction }}</h2>
+                <p>Predicted: {{ result }}</p>
+                <p>Confidence: {{ confidence_percentage }}%</p>
+            {% endif %}
+        </div>
 
-    <!-- Add any additional HTML content or elements here -->
-</div>
+        <!-- Add any additional HTML content or elements here -->
+    </div>
 </body>
 </html>
